@@ -1,0 +1,187 @@
+set nocompatible                " be iMproved, required
+set nocompatible                " required
+filetype off                    " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" alternatively, pass a path where Vundle should install plugins
+" call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'junegunn/goyo.vim'
+Bundle 'itchyny/calendar.vim'
+
+" add all your plguins here 
+" (note: older version of Vundle used Bundle instead of Plugin)
+
+" ...
+
+" all of your Plugins must be added before the following line
+call vundle#end()               " required for Vundle
+filetype plugin indent on       " required for Vundle
+" run :PluginInstall to install all plugins
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" General 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" with a map laeder it's possible to do extra key combinations like <leader>w
+" saves the current file
+let mapleader = ","
+
+set autoread                    " auto read when a file is changed from outside
+
+" fast saving with <leader>w
+nmap <leader>w :w!<cr>
+
+" :W sudo saves the file 
+" (useful for handling the permission-denied error)
+command W w !sudo tee % > /dev/null
+
+" if mouse exists
+if has('mouse')
+    set mouse=a                 " enable mouse support
+endif 
+if &term =~ '^screen'           " tmux knows the extended mouse mode
+    set ttymouse=xterm2
+endif
+
+" Code format
+set expandtab                   " use spaces instead of tabs
+set tabstop=4                   " convert tabs into 4 spaces
+set softtabstop=4               " delete four spaces at once for indentations
+set shiftwidth=4                " >>, << indent 4 spaces
+set backsapce=indent,eol,start  " backspace deletes indentation, EOL, and start 
+
+" Search 
+set incsearch                   " show search matches as you type
+set nowrapscan                  " don't return to the top when searching
+set hlsearch                    " highlight search terms
+set ignorecase                  " ignore case sensitivity when searching string
+set smartcase                   " ignore case if search token is all lower-case
+
+set encoding=utf-8              " use UTF-8, we are civilized here
+set fileencodings=utf-8,cp949   " set filename encoding to utf-8 and cp949(kr)
+
+" settings for YouCompleteMe
+" 1. make sure auto-complete window goes away when finished being used
+" 2. <leader> + g key becomes goto shortcut
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+" " let YouCompleteMe and Virtualenv play nicely with each other
+" " (I actually am not sure if this is necessary)
+" py << EOF
+" import os
+" import sys
+" if 'VIRTUAL_ENV' in os.environ:
+"     project_base_dir = os.environ['VIRTUAL_ENV']
+"     activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+"     execfile(activate_this, dict(__file__=activate_this))
+" EOF
+
+" PEP8 compliant indentation
+au BufNewFile,BufRead *.py
+    \ set tabstop=4             " standard 4 spaces instead of tabs
+    \ set softtabstop=4                     
+    \ set shiftwidth=4
+    \ set textwidth=79          " we do not go beyond 79 characters
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+" I might be a full-stack developer one day (ha!)
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Appearance
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set ruler                       " display cursor location on the bottom right
+set colorcolumn=80,120          " display red line at 80 column line
+highlight colorcolumn ctermbg=red 
+set textwidth=79                " wrap at 79 column line automatically
+set lazyredraw                  " wait to redraw
+set redrawtime=10000            " longer redrawtime to prevent timeout
+set showcmd                     " display incoming commands on the bottom right
+set history=1000                " lines of history to remember
+set undolevels=1000             " lines of undos to remember
+set wrap                        " wrap lines
+set hidden                      " keep buffer when you switch out of them
+set wildmenu                    " command auto complete (with tab)
+set wildmode=list:longest       " show matching command in a list form
+set number                      " show line number
+set visualbell                  " enable visual bell
+
+"Upgrade the status line to give more usefull information
+set statusline=%F\ %m%r%w%y\ %=(%L\ loc)\ [#\%03.3b\ 0x\%02.2B]\ \ %l,%v\ \ %P
+set laststatus=2 "Make statusline always on
+set cmdheight=2 "default command line number of lines, 2 makes it easier to read
+
+" enable filetype plugins
+filetype plugin on
+filetype indent on
+
+" flag extraneous whitespaces
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+" set font according to system
+if has("mac") || has("macunix")
+    set gfn=IBM\ Plex\ Mono:h14,Hack:h14,Source\ Code\ Pro:h15,Menlo:h15
+elseif has("win16") || has("win32")
+    set gfn=IBM\ Plex\ Mono:h14,Source\ Code\ Pro:h12,Bitstream\ Vera\ Sans\ Mono:h11
+elseif has("gui_gtk2")
+    set gfn=IBM\ Plex\ Mono:h14,:Hack\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
+elseif has("linux")
+    set gfn=IBM\ Plex\ Mono:h14,:Hack\ 14,Source\ Code\ Pro\ 12,Bitstream\ Vera\ Sans\ Mono\ 11
+elseif has("unix")
+    set gfn=Monospace\ 11
+endif
+
+" change cursor appearance of insert/normal mode
+if &term =~ "screen."
+    let &t_ti.="\eP\e[1 q\e\\"
+    let &t_SI.="\eP\e[5 q\e\\"
+    let &t_EI.="\eP\e[1 q\e\\"
+    let &t_te.="\eP\e[0 q\e\\"
+else
+    let &t_ti.="\<Esc>[1 q"
+    let &t_SI.="\<Esc>[5 q"
+    let &t_EI.="\<Esc>[1 q"
+    let &t_te.="\<Esc>[0 q"
+endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Scripts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fast editing and reloading of vimrc config
+map <leader>e :e! ~/.vimrc<cr>
+autocmd! bufwritepost ~/.vimrc source ~/.vimrc
+
+" persistent undo
+" try
+"     set undodir=~/.vim_runtime/tmp/undodir
+set undofile
+" catch
+" endtry
+
+" Parenthesis / brackets
+vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+vnoremap $q <esc>`>a'<esc>`<i'<esc>
+vnoremap $e <esc>`>a"<esc>`<i"<esc>
+
+" map auto complete of (, ", ', [
+inoremap $1 ()<esc>i
+inoremap $2 []<esc>i
+inoremap $3 {}<esc>i
+inoremap $4 {<esc>o}<esc>O
+inoremap $q ''<esc>i
+inoremap $e ""<esc>i
