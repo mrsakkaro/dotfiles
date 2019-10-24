@@ -1,3 +1,4 @@
+#! /bin/bash 
 # if not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -98,7 +99,7 @@ alias f="find . | grep "
 alias checkcommand="type -t"
 
 # Show current network connections to the server
-alias ipview="netstat -anpl | grep :80 | awk {'print \$5'} | cut -d\":\" -f1 | sort | uniq -c | sort -n | sed -e 's/^ *//' -e 's/ *\$//'"
+#alias ipview="netstat -anpl | grep :80 | awk {'print \$5'} | cut -d\":\" -f1 | sort | uniq -c | sort -n | sed -e 's/^ *//' -e 's/ *\$//'"
 
 # Show open ports
 alias openports='netstat -nape --inet'
@@ -125,12 +126,12 @@ alias sha1='openssl sha1'
 # Environments and PATHs
 ###############################################################################
 # load MyMusicTaste configuration
-if [ -f $HOME/.mmt_config ]; then
+if [ -f "$HOME"/.mmt_config ]; then
     source $HOME/.mmt_config
 fi
 
 # laod github token
-if [ -f $HOME/.github_token ]; then
+if [ -f "$HOME"/.github_token ]; then
     source $HOME/.github_token
 fi
 
@@ -148,19 +149,19 @@ test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 ###############################################################################
 # extract archives automcatically
 extract () {
-    if [ -f $1 ] ; then
+    if [ -f "$1" ] ; then
         case $1 in
-            *.tar.bz2)   tar xvjf $1;;
-            *.tar.gz)    tar xvzf $1;;
-            *.bz2)       bunzip2 $1 ;;
-            *.rar)       unrar x $1 ;;
-            *.gz)        gunzip $1  ;;
-            *.tar)       tar xvf $1 ;;
-            *.tbz2)      tar xvjf $1;;
-            *.tgz)       tar xvzf $1;;
-            *.zip)       unzip $1   ;;
-            *.Z)         uncompress $1  ;;
-            *.7z)        7z x $1;;
+            *.tar.bz2)   tar xvjf "$1";;
+            *.tar.gz)    tar xvzf "$1";;
+            *.bz2)       bunzip2 "$1" ;;
+            *.rar)       unrar x "$1" ;;
+            *.gz)        gunzip "$1"  ;;
+            *.tar)       tar xvf "$1" ;;
+            *.tbz2)      tar xvjf "$1";;
+            *.tgz)       tar xvzf "$1";;
+            *.zip)       unzip "$1"   ;;
+            *.Z)         uncompress "$1"  ;;
+            *.7z)        7z x "$1";;
             *) echo "don't know how to extract '$1'..." ;;
         esac
     else
@@ -184,7 +185,7 @@ function 2mpg() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.mpg" && rm 
 # convert document and image files
 function 2txt() { soffice --headless txt "$1"; }
 function 2pdf() {
-    if [ ${1: -4} == ".html" ]
+    if [ "${1: -4}" == ".html" ]
     then
         fname="${1%.*}"
         soffice --headless --convert-to odt "$1"
@@ -203,7 +204,7 @@ function 2tiff() { fname="${1%.*}"; convert "$1" "$fname.tiff" && rm "$1"; }
 function 2gif() {
     fname="${1%.*}"
     if [ ! -d "/tmp/gif" ]; then mkdir "/tmp/gif"; fi
-    if [ ${1: -4} == ".mp4" ] || [ ${1: -4} == ".mov" ] || [ ${1: -4} == ".avi" ] || [ ${1: -4} == ".flv" ] || [ ${1: -4} == ".mpg" ] || [ ${1: -4} == ".webm" ]
+    if [ "${1: -4}" == ".mp4" ] || [ "${1: -4}" == ".mov" ] || [ "${1: -4}" == ".avi" ] || [ "${1: -4}" == ".flv" ] || [ "${1: -4}" == ".mpg" ] || [ "${1: -4}" == ".webm" ]
     then
         ffmpeg -i "$1" -r 10 -vf 'scale=trunc(oh*a/2)*2:480' /tmp/gif/out%04d.png
         convert -delay 1x10 "/tmp/gif/*.png" -fuzz 2% +dither -coalesce -layers OptimizeTransparency +map "$fname.gif"
