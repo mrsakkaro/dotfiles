@@ -1,0 +1,7 @@
+#set locale
+export LC_ALL=en_US.UTF-8
+
+# load ~/.bashrc 
+if [ -f $HOME/.bashrc ]; then
+    source $HOME/.bashrc
+fi

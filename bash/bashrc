@@ -1,0 +1,283 @@
+# if not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+
+###############################################################################
+# Appearance
+###############################################################################
+# ANSI COLORS
+NORMAL="\[\e[0m\]"     # NORMAL RESET
+RED="\[\e[31m\]"       # RED
+GREEN="\[\e[32m\]"     # GREEN
+YELLOW="\[\e[33m\]"    # YELLOW
+BLUE="\[\e[34m\]"      # BLUE
+MAGENTA="\[\e[1;35m\]" # MAGENTA
+CYAN="\[\e[36m\]"      # CYAN
+WHITE="\[\e[1;37m\]"   # BOLD WHITE
+YONR="\[\e[33;41m\]"   # SUDO YELLOW ON RED
+
+GIT_CLEAN=$GREEN
+GIT_DIRTY=$RED
+
+# shell Colors and visuals
+export PS1="${debian_chroot:+($debian_chroot)}\[\033[32;1m\]\u@\h\[\033[00m\]:\[\033[33;1m\]\w\[\033[m\]\\[\033[\$(acolor)m\]\$(parse_git_branch)\[\033[00m\]\$ "
+parse_git_branch() {
+git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+acolor() {
+    [[ -n $(git status --porcelain=v2 2>/dev/null) ]] && echo 31 || echo 33
+}
+
+# enable color support of ls
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+elif [ "`uname`" == "Darwin" ]; then
+    export CLICOLOR=1
+    export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd #GxFxCxDxBxegedabagaced
+fi
+
+
+###############################################################################
+# Alias 
+###############################################################################
+# change directory aliases
+alias cd..='cd ..'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
+# cd into the old directory
+alias bd='cd "$OLDPWD"'
+
+# Remove a directory and all files
+alias rmd='/bin/rm  --recursive --force --verbose'
+
+# Some more ls aliases
+alias la='ls -Alh' # show hidden files
+alias ls='ls -aFh --color=always' # add colors and file type extensions
+alias lx='ls -lXBh' # sort by extension
+alias lk='ls -lSrh' # sort by size
+alias lc='ls -lcrh' # sort by change time
+alias lu='ls -lurh' # sort by access time
+alias lr='ls -lRh' # recursive ls
+alias lt='ls -ltrh' # sort by date
+alias lm='ls -alh |more' # pipe through 'more'
+alias lw='ls -xAh' # wide listing format
+alias ll='ls -Fls' # long listing format
+alias labc='ls -lap' #alphabetical sort
+alias lf="ls -l | egrep -v '^d'" # files only
+alias ldir="ls -l | egrep '^d'" # directories only
+
+# chmod commands aliases
+alias mx='chmod a+x'
+alias cm000='chmod -R 000'
+alias cm644='chmod -R 644'
+alias cm666='chmod -R 666'
+alias cm755='chmod -R 755'
+alias cm777='chmod -R 777'
+
+# Search command line history
+alias h="history | grep "
+
+# Search running processes
+alias p="ps aux | grep "
+alias topcpu="/bin/ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
+
+# Search files in the current folder
+alias f="find . | grep "
+
+# To see if a command is aliased, a file, or a built-in command
+alias checkcommand="type -t"
+
+# Show current network connections to the server
+alias ipview="netstat -anpl | grep :80 | awk {'print \$5'} | cut -d\":\" -f1 | sort | uniq -c | sort -n | sed -e 's/^ *//' -e 's/ *\$//'"
+
+# Show open ports
+alias openports='netstat -nape --inet'
+
+# Alias's for safe and forced reboots
+alias rebootsafe='sudo shutdown -r now'
+alias rebootforce='sudo shutdown -r -n now'
+
+# disk space and usage alias
+alias diskspace="du -S | sort -n -r |more"
+alias folders='du -h --max-depth=1'
+alias folderssort='find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
+alias tree='tree -CAhF --dirsfirst'
+alias treed='tree -CAFd'
+alias mountedinfo='df -hT'
+
+# Show all logs in /var/log
+alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
+
+# SHA1
+alias sha1='openssl sha1'
+
+###############################################################################
+# Environments and PATHs
+###############################################################################
+# load MyMusicTaste configuration
+if [ -f $HOME/.mmt_config ]; then
+    source $HOME/.mmt_config
+fi
+
+# laod github token
+if [ -f $HOME/.github_token ]; then
+    source $HOME/.github_token
+fi
+
+# Go Dev Environment
+export GOPATH="${HOME}/.go"
+export GOROOT="/usr/local/Cellar/go/1.12.7/libexec"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+
+test -d "${GOPATH}" || mkdir "${GOPATH}"
+test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
+
+
+###############################################################################
+# Useful scripts
+###############################################################################
+# extract archives automcatically
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xvjf $1;;
+            *.tar.gz)    tar xvzf $1;;
+            *.bz2)       bunzip2 $1 ;;
+            *.rar)       unrar x $1 ;;
+            *.gz)        gunzip $1  ;;
+            *.tar)       tar xvf $1 ;;
+            *.tbz2)      tar xvjf $1;;
+            *.tgz)       tar xvzf $1;;
+            *.zip)       unzip $1   ;;
+            *.Z)         uncompress $1  ;;
+            *.7z)        7z x $1;;
+            *) echo "don't know how to extract '$1'..." ;;
+        esac
+    else
+        echo "'$1' is not a valid file!"
+    fi
+}
+
+# convert audio and video files
+function 2ogg() { eyeD3 --remove-all-images "$1"; fname="${1%.*}"; sox "$1" "$fname.ogg" && rm "$1"; }
+function 2wav() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.wav" && rm "$1"; }
+function 2aif() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.aif" && rm "$1"; }
+function 2mp3() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.mp3" && rm "$1"; }
+function 2mov() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.mov" && rm "$1"; }
+function 2mp4() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.mp4" && rm "$1"; }
+function 2avi() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.avi" && rm "$1"; }
+function 2webm() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" -c:v libvpx "$fname.webm" && rm "$1"; }
+function 2h265() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" -c:v libx265 "$fname'_converted'.mp4" && rm "$1"; }
+function 2flv() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.flv" && rm "$1"; }
+function 2mpg() { fname="${1%.*}"; ffmpeg -threads 0 -i "$1" "$fname.mpg" && rm "$1"; }
+
+# convert document and image files
+function 2txt() { soffice --headless txt "$1"; }
+function 2pdf() {
+    if [ ${1: -4} == ".html" ]
+    then
+        fname="${1%.*}"
+        soffice --headless --convert-to odt "$1"
+        soffice --headless pdf "$fname.html"
+    else
+        soffice --headless pdf "$1"
+    fi
+}
+function 2doc() { soffice --headless doc "$1"; }
+function 2odt() { soffice --headless odt "$1"; }
+function 2jpeg() { fname="${1%.*}"; convert "$1" "$fname.jpg" && rm "$1"; }
+function 2jpg() { fname="${1%.*}"; convert "$1" "$fname.jpg" && rm "$1"; }
+function 2png() { fname="${1%.*}"; convert "$1" "$fname.png" && rm "$1"; }
+function 2bmp() { fname="${1%.*}"; convert "$1" "$fname.bmp" && rm "$1"; }
+function 2tiff() { fname="${1%.*}"; convert "$1" "$fname.tiff" && rm "$1"; }
+function 2gif() {
+    fname="${1%.*}"
+    if [ ! -d "/tmp/gif" ]; then mkdir "/tmp/gif"; fi
+    if [ ${1: -4} == ".mp4" ] || [ ${1: -4} == ".mov" ] || [ ${1: -4} == ".avi" ] || [ ${1: -4} == ".flv" ] || [ ${1: -4} == ".mpg" ] || [ ${1: -4} == ".webm" ]
+    then
+        ffmpeg -i "$1" -r 10 -vf 'scale=trunc(oh*a/2)*2:480' /tmp/gif/out%04d.png
+        convert -delay 1x10 "/tmp/gif/*.png" -fuzz 2% +dither -coalesce -layers OptimizeTransparency +map "$fname.gif"
+    else
+        convert "$1" "$fname.gif"
+        rm "$1"
+    fi
+    rm -r "/tmp/gif"
+}
+
+# don't put duplicated lines or lines starting with space in the history
+# see bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+PROMPT_COMMAND='history -a'
+
+# allow ctrl-S for history navigation (with ctrl-R)
+stty -ixon
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if neccesary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# add an "alert" alias for long running commands. use like so: sleep 10; alert 
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+###############################################################################
+# Fancy & Useful Scripts
+###############################################################################
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+
+# color for manpages in less makes manpages a little easier to read
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+if [ -f ~/.git-completion.bash ]; then
+    . ~/.git-completion.bash
+fi
+
+
+# ulimit sets the resource limitation (-c: maximum page size)
+ulimit -c unlimited
+
+if [ -f ~/.bash_custom ]; then
+    . ~/.bash_custom
+fi
+
+# jokes
+
+# use this for when the boss comes around to look busy.
+alias busy="cat /dev/urandom | hexdump -C | grep 'ca fe'" 
