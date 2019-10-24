@@ -17,7 +17,8 @@ Bundle 'itchyny/calendar.vim'
 
 " add all your plguins here 
 " (note: older version of Vundle used Bundle instead of Plugin)
-
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-fugitive'
 " ...
 
 " all of your Plugins must be added before the following line
@@ -98,6 +99,7 @@ au BufNewFile,BufRead *.js, *.html, *.css
     \ set tabstop=2
     \ set softtabstop=2
     \ set shiftwidth=2
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Appearance
