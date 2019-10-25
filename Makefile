@@ -1,5 +1,23 @@
 .PHONY: all 
-all: dotfiles 
+all: dotfiles
+
+ifeq ($(OS),Windows_NT)
+	UNAME = Windows
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S), Linux)
+		UNAME = Linux
+	endif
+	UNAME ?= Other
+endif
+
+install:
+	@make $(UNAME)
+
+Linux: bash fzf fish git mutt byobu weechat vim nvim gnupg bin vscode sublime
+Windows: bash git vim
+Other: bash git vim
+
 
 .PHONY: dotfiles 
 dotfiles: bash vim tmux ## Installs bash vim tmux configs
@@ -86,6 +104,7 @@ clean-dotfiles: ## Clean the dotfiles.
 		echo "vimrc detected!! moved to tmp/vim directory"; \
 		mkdir -p $(CURDIR)/tmp/vim; \
 		cp $(HOME)/.vimrc $(CURDIR)/tmp/bash/.vimrc && rm $(HOME)/.vimrc; \
+		vim +PlugClean +qall
 		rm $(CURDIR)/tmp/vim/breadcrums; \
 	fi
 	rm $(HOME)/.tmux.conf.local
