@@ -1,3 +1,6 @@
 # VIM Related files
 *.swp
 *.un~
+
+# Mac specific files
+.DS_Store
