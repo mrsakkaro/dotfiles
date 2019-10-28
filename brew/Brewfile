@@ -1,5 +1,3 @@
-
-
 # Binaries
 brew 'mysql'
 brew 'mysql@5.7'
