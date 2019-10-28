@@ -1,3 +1,5 @@
+BREW := /usr/local/bin/brew
+
 .PHONY: all 
 all: dotfiles
 
@@ -17,6 +19,28 @@ install:
 Linux: bash fzf fish git mutt byobu weechat vim nvim gnupg bin vscode sublime
 Windows: bash git vim
 Other: bash git vim
+
+.PHONY: dotfiles-check
+dotfiles-check: ## Check if each dotfiles should be executed
+	@echo "Detecting existing bashrc and bash_profile"
+	@if [ -f "$(HOME)/.bashrc" ] ; then \
+		echo "bashrc detected!! moved to tmp/bash directory"; \
+		mkdir -p $(CURDIR)/tmp/bash; \
+		cp $(HOME)/.bashrc $(CURDIR)/tmp/bash/.bashrc && rm $(HOME)/.bashrc; \
+		rm $(CURDIR)/tmp/bash/breadcrums; \
+	fi
+	@if [ -f "$(HOME)/.bash_profile" ] ; then \
+		echo "bash_profile detected!! moved to tmp/bash directory"; \
+		mkdir -p $(CURDIR)/tmp/bash; \
+		cp $(HOME)/.bash_profile $(CURDIR)/tmp/bash/.bash_profile && rm $(HOME)/.bash_profile; \
+	fi 
+	@echo "Detecting existing vimrc"
+	@if [ -f "$(HOME)/.vimrc" ] ; then \
+		echo "vimrc detected!! moved to tmp/vim directory"; \
+		mkdir -p $(CURDIR)/tmp/vim; \
+		cp $(HOME)/.vimrc $(CURDIR)/tmp/bash/.vimrc && rm $(HOME)/.vimrc; \
+		rm $(CURDIR)/tmp/vim/breadcrums; \
+	fi
 
 
 .PHONY: dotfiles 
@@ -66,7 +90,7 @@ pyenv: ## Installs pyenv.
 
 .PHONY: golang
 ifeq (${OS},OSX)
-golang: brew-check ## Installs golang from brew.
+golang: | brew ## Installs golang from brew.
 	@echo "Starting go Setup..."
 	brew install go
 	@echo "Done! (go)"
@@ -76,17 +100,27 @@ golang:
 	@echo "Done! (go)"
 endif
 
-.PHONY: brew-check
-brew-check: ## Check if brew is installed. Abort if it isn't.
-	@echo "Checking if brew is installed..."
-	$(if $(shell which brew), \
-		@echo "Yayy! brew is installed." \
-		,$(error "Brew is not installed"))
-	@echo "Done! (brew-check)"
+.PHONY: brew
+$(BREW): ## Installs brew if it's not installed already
+	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-.PHONY: clean-dotfiles 
-clean-dotfiles: ## Clean the dotfiles.
-	@echo "Cleaning up..."
+.PHONY: clean-vim
+clean-vim:
+	@echo "Cleaning vim setting up..."
+	@echo "Detecting existing vimrc"
+	@if [ -f "$(HOME)/.vimrc" ] ; then \
+		echo "vimrc detected!! moved to tmp/vim directory"; \
+		mkdir -p $(CURDIR)/tmp/vim; \
+		cp $(HOME)/.vimrc $(CURDIR)/tmp/bash/.vimrc && rm $(HOME)/.vimrc; \
+		vim +PlugClean +qall
+		rm $(CURDIR)/tmp/vim/breadcrums; \
+	fi
+	rm -r $(HOME)/.vim
+	@echo "Done! (cleaning vim)"
+
+.PHONY: clean-bash
+clean-bash:
+	@echo "Cleaning bash setting up..."
 	@echo "Detecting existing bashrc and bash_profile"
 	@if [ -f "$(HOME)/.bashrc" ] ; then \
 		echo "bashrc detected!! moved to tmp/bash directory"; \
@@ -99,14 +133,10 @@ clean-dotfiles: ## Clean the dotfiles.
 		mkdir -p $(CURDIR)/tmp/bash; \
 		cp $(HOME)/.bash_profile $(CURDIR)/tmp/bash/.bash_profile && rm $(HOME)/.bash_profile; \
 	fi 
-	@echo "Detecting existing vimrc"
-	@if [ -f "$(HOME)/.vimrc" ] ; then \
-		echo "vimrc detected!! moved to tmp/vim directory"; \
-		mkdir -p $(CURDIR)/tmp/vim; \
-		cp $(HOME)/.vimrc $(CURDIR)/tmp/bash/.vimrc && rm $(HOME)/.vimrc; \
-		vim +PlugClean +qall
-		rm $(CURDIR)/tmp/vim/breadcrums; \
-	fi
+	@echo "Done! (cleaning bash)"
+
+.PHONY: clean-dotfiles 
+clean-dotfiles: clean-bash clean-vim ## Clean the dotfiles.
 	rm $(HOME)/.tmux.conf.local
 	rm -r $(HOME)/.tmux $(HOME)/.vim
 	@echo "Done! (cleaning)"
