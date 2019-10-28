@@ -55,7 +55,7 @@ set expandtab                   " use spaces instead of tabs
 set tabstop=4                   " convert tabs into 4 spaces
 set softtabstop=4               " delete four spaces at once for indentations
 set shiftwidth=4                " >>, << indent 4 spaces
-set backsapce=indent,eol,start  " backspace deletes indentation, EOL, and start 
+set backspace=indent,eol,start  " backspace deletes indentation, EOL, and start 
 
 " Search 
 set incsearch                   " show search matches as you type
