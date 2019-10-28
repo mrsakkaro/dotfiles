@@ -17,7 +17,8 @@ Bundle 'itchyny/calendar.vim'
 
 " add all your plguins here 
 " (note: older version of Vundle used Bundle instead of Plugin)
-
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-fugitive'
 " ...
 
 " all of your Plugins must be added before the following line
@@ -54,7 +55,7 @@ set expandtab                   " use spaces instead of tabs
 set tabstop=4                   " convert tabs into 4 spaces
 set softtabstop=4               " delete four spaces at once for indentations
 set shiftwidth=4                " >>, << indent 4 spaces
-set backsapce=indent,eol,start  " backspace deletes indentation, EOL, and start 
+set backspace=indent,eol,start  " backspace deletes indentation, EOL, and start 
 
 " Search 
 set incsearch                   " show search matches as you type
@@ -98,6 +99,7 @@ au BufNewFile,BufRead *.js, *.html, *.css
     \ set tabstop=2
     \ set softtabstop=2
     \ set shiftwidth=2
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Appearance
