@@ -90,7 +90,7 @@ au BufNewFile,BufRead *.py
     \ set tabstop=4             " standard 4 spaces instead of tabs
     \ set softtabstop=4                     
     \ set shiftwidth=4
-    \ set textwidth=79          " we do not go beyond 79 characters
+    \ set textwidth=79          " wrap at 79 column line automatically
     \ set expandtab
     \ set autoindent
     \ set fileformat=unix
@@ -109,7 +109,6 @@ syntax on                       " turn syntax on
 set ruler                       " display cursor location on the bottom right
 set colorcolumn=80,120          " display red line at 80 column line
 highlight colorcolumn ctermbg=red 
-set textwidth=79                " wrap at 79 column line automatically
 set lazyredraw                  " wait to redraw
 set redrawtime=10000            " longer redrawtime to prevent timeout
 set showcmd                     " display incoming commands on the bottom right
