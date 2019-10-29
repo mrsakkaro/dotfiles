@@ -101,6 +101,9 @@ golang:
 endif
 
 .PHONY: brew
+brew: | $(BREW)
+	brew update
+
 $(BREW): ## Installs brew if it's not installed already
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
