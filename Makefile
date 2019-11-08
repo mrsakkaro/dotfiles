@@ -20,7 +20,7 @@ bash: ## Install the bash related dotfiles.
 .PHONY: vim 
 vim: ## Install vimrc & Vundle.vim and its packages.
 	@echo "Starting vim Setup..."
-	ln -sfn $(CURDIR)/.vimrc $(HOME)/.vimrc
+	ln -sfn $(CURDIR)/vim/vimrc $(HOME)/.vimrc
 	git clone https://github.com/VundleVim/Vundle.vim.git $(HOME)/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
 	@echo "Done! (vim)\n"
