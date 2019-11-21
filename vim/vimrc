@@ -59,7 +59,7 @@ set shiftwidth=4                " >>, << indent 4 spaces
 set backspace=indent,eol,start  " backspace deletes indentation, EOL, and start
 set foldmethod=indent           " indent based folds seems to work best
 set foldcolumn=1                " define 1 col at the left, to indicate folding
-"set foldlevelstart=99           " start file with all folds opened
+set foldlevelstart=99           " start file with all folds opened
 
 " Search 
 set incsearch                   " show search matches as you type
