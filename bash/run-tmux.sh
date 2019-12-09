@@ -6,7 +6,7 @@ tmux new-session -d -s mmt2 \; \
     select-pane -t 1 \; \
     split-window -v -p 80 \; \
     select-pane -t 1 \; \
-    split-window -h -p 70 \; \
+    split-window -h -p 80 \; \
     select-pane -t 2 \; \
     send-keys 'htop' C-m \;
     

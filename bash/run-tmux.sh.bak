@@ -1,0 +1,10 @@
+#!/bin/bash
+cd ~/Repository/mmt-server/services
+
+tmux new-session -d -s mmt2 \; \
+    split-window -h -p 30 \; \
+    select-pane -t 2 \; \
+    split-window -v -p 5 \; \
+    select-pane -t 2 \; \
+    split-window -h -p 30 \; \
+    send-keys 'htop' C-m \; \
