@@ -103,11 +103,22 @@ au BufNewFile,BufRead *.py
     \ set fileformat=unix
 
 " I might be a full-stack developer one day (ha!)
-au BufNewFile,BufRead *.js, *.html, *.css
+au BufNewFile,BufRead *.js,*.html,*.css
     \ set tabstop=2
     \ set softtabstop=2
     \ set shiftwidth=2
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
 
+" I do edit swagger.. so fml.. I mean yaml!
+au BufNewFile,BufRead *.yaml
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Appearance
