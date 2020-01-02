@@ -153,6 +153,10 @@ export NVM_DIR="$HOME/.nvm"
 ###############################################################################
 # Useful scripts
 ###############################################################################
+
+# find port occupying process and kill it
+kp=sudo lsof -t -i tcp:8009 | xargs kill
+
 # extract archives automcatically
 extract () {
     if [ -f "$1" ] ; then
