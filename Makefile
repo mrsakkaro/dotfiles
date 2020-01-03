@@ -39,7 +39,8 @@ pyenv: ## Install pyenv.
 	@echo "Starting pyenv Setup..."
 	$(if $(shell pyenv versions), \
 		@echo "pyenv is installed already", \
-		git clone https://github.com/pyenv/pyenv.git $(HOME)/.pyenv)
+		git clone https://github.com/pyenv/pyenv.git $(HOME)/.pyenv, \
+		git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv)
 	@echo "Done! (pyenv)"
 
 .PHONY: golang
