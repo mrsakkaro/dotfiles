@@ -1,0 +1,15 @@
+# Binaries
+brew 'mysql'
+brew 'mysql@5.7'
+brew 'redis'
+brew 'mas'                              # Mac App Store manager
+
+# Apps
+cask 'firefox'
+cask 'slack'
+cask 'telegram-desktop'
+
+# Mac App Store
+mas 'Keynote', id: 409183694
+mas 'The Unarchiver', id: 425424353
+
