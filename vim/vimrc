@@ -33,6 +33,9 @@ filetype plugin indent on       " required for Vundle
 " saves the current file
 let mapleader = ","
 
+" Enable folding with the spacebar
+nnoremap <space> za
+
 set autoread                    " auto read when a file is changed from outside
 
 " fast saving with <leader>w
@@ -93,6 +96,20 @@ au BufNewFile,BufRead *.py
     \ set expandtab
     \ set autoindent
     \ set fileformat=unix
+    \ set foldmethod=indent
+
+""""""
+" PEP8 Suggestions
+"""""
+
+" Turn off settings in 'formatoptions' relating to comment formatting.
+" - c : do not automatically insert the comment leader when wrapping based on
+"    'textwidth'
+" - o : do not insert the comment leader when using 'o' or 'O' from command mode
+" - r : do not insert the comment leader when hitting <Enter> in insert mode
+" Python: not needed
+" C: prevents insertion of '*' at the beginning of every line in a comment
+au BufRead,BufNewFile *.c,*.h set formatoptions-=c formatoptions-=o formatoptions-=r
 
 " I might be a full-stack developer one day (ha!)
 au BufNewFile,BufRead *.js, *.html, *.css
@@ -100,14 +117,23 @@ au BufNewFile,BufRead *.js, *.html, *.css
     \ set softtabstop=2
     \ set shiftwidth=2
 
+" ignore following extentions
+set wildignore+=*.so,*.swp,*.zip,*.pyc
+set wildignore+=*.o,*.out,*.obj,*.so,*.pyc
+set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz
+set wildignore+=*/.sass-cache/*
+set wildignore+=*.swp,*~,._*,*.un~
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Appearance
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set ruler                       " display cursor location on the bottom right
-set colorcolumn=80,120          " display red line at 80 column line
-highlight colorcolumn ctermbg=red 
-set textwidth=79                " wrap at 79 column line automatically
+" display red line at 80 column line & wrap at 79 column line automatically
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h,*.go
+    \ set colorcolumn=80,120 
+    \ highlight colorcolumn ctermbg=red 
+    \ set textwidth=79
 set lazyredraw                  " wait to redraw
 set redrawtime=10000            " longer redrawtime to prevent timeout
 set showcmd                     " display incoming commands on the bottom right
@@ -120,10 +146,10 @@ set wildmode=list:longest       " show matching command in a list form
 set number                      " show line number
 set visualbell                  " enable visual bell
 
-"Upgrade the status line to give more usefull information
+" upgrade the status line to give more usefull information
 set statusline=%F\ %m%r%w%y\ %=(%L\ loc)\ [#\%03.3b\ 0x\%02.2B]\ \ %l,%v\ \ %P
-set laststatus=2 "Make statusline always on
-set cmdheight=2 "default command line number of lines, 2 makes it easier to read
+set laststatus=2 " make statusline always on
+set cmdheight=2 " default number of command lines, 2 makes it easier to read
 
 " enable filetype plugins
 filetype plugin on
@@ -172,7 +198,21 @@ set undofile
 " catch
 " endtry
 
-" Parenthesis / brackets
+" autocompletion using the TAB key
+" this function determines, whether we are on the start of the line 
+" text (then tab indents) or if we want to try autocompletion
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+" eemap the tab key to select action with InsertTabWrapper
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+
+" parenthesis / brackets
 vnoremap $1 <esc>`>a)<esc>`<i(<esc>
 vnoremap $2 <esc>`>a]<esc>`<i[<esc>
 vnoremap $3 <esc>`>a}<esc>`<i{<esc>
