@@ -124,33 +124,6 @@ alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' 
 alias sha1='openssl sha1'
 
 ###############################################################################
-# Environments and PATHs
-###############################################################################
-# load MyMusicTaste configuration
-if [ -f "$HOME"/.mmt_config ]; then
-    source $HOME/.mmt_config
-fi
-
-# laod github token
-if [ -f "$HOME"/.github_token ]; then
-    source $HOME/.github_token
-fi
-
-# Go Dev Environment
-export GOPATH="${HOME}/.go"
-export GOROOT="/usr/local/Cellar/go/1.12.7/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-
-test -d "${GOPATH}" || mkdir "${GOPATH}"
-test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
-
-# NVM Environment
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-
-###############################################################################
 # Useful scripts
 ###############################################################################
 
@@ -292,3 +265,30 @@ fi
 
 # use this for when the boss comes around to look busy.
 alias busy="cat /dev/urandom | hexdump -C | grep 'ca fe'" 
+
+###############################################################################
+# Environments and PATHs
+###############################################################################
+# laod github token
+if [ -f "$HOME"/.github_token ]; then
+    source $HOME/.github_token
+fi
+
+# Go Dev Environment
+export GOPATH="${HOME}/.go"
+export GOROOT="/usr/local/Cellar/go/1.12.7/libexec"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+
+test -d "${GOPATH}" || mkdir "${GOPATH}"
+test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
+
+# NVM Environment
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# load MyMusicTaste configuration
+if [ -f "$HOME"/.mmt_config ]; then
+    source $HOME/.mmt_config
+fi
+
