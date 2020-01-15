@@ -89,8 +89,13 @@ map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 " EOF
 
 " remember what was folded and what was not
-au BufWinLeave * mkview
-au BufWinEnter * silent loadview
+" source 1: https://stackoverflow.com/a/37558470
+" source 2: https://vi.stackexchange.com/a/19333
+augroup remember_folds
+    autocmd!
+    autocmd BufWinLeave ?* mkview | filetype detect
+    autocmd BufWinEnter ?* silent! loadview | filetype detect
+augroup END
 
 " PEP8 compliant indentation
 au BufNewFile,BufRead *.py
@@ -125,7 +130,7 @@ au BufNewFile,BufRead *.yaml
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax on                       " turn syntax on
 set ruler                       " display cursor location on the bottom right
-set colorcolumn=80,120          " display red line at 80 column line
+set colorcolumn=80,92,120          " display red line at 80 column line
 highlight colorcolumn ctermbg=red 
 "set textwidth=79                " wrap at 79 column line automatically
 set lazyredraw                  " wait to redraw
@@ -144,7 +149,13 @@ set visualbell                  " enable visual bell
 "   Range:  233 (darkest) ~ 239 (lightest)
 "   Default: 237
 let g:seoul256_background = 236
-colo seoul256
+" set theme to seoul256 if plugin is installed
+try
+    colo seoul256
+catch
+    echo "seoul256 is not installed"
+    "PlugInstall junegunn/seoul256.vim
+endtry
 
 "Upgrade the status line to give more usefull information
 set statusline=%F\ %m%r%w%y\ %=(%L\ loc)\ [#\%03.3b\ 0x\%02.2B]\ \ %l,%v\ \ %P
@@ -195,11 +206,11 @@ map <leader>e :e! ~/.vimrc<cr>
 autocmd! bufwritepost ~/.vimrc source ~/.vimrc
 
 " persistent undo
-" try
-"     set undodir=~/.vim_runtime/tmp/undodir
-set undofile
-" catch
-" endtry
+try
+    set undodir=~/.vim/undo
+" set undofile
+catch
+endtry
 
 " Parenthesis / brackets
 vnoremap $1 <esc>`>a)<esc>`<i(<esc>
