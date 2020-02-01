@@ -100,7 +100,7 @@ augroup END
 " PEP8 compliant indentation
 au BufNewFile,BufRead *.py
     \ set tabstop=4             " standard 4 spaces instead of tabs
-    \ set softtabstop=4                     
+    \ set softtabstop=4
     \ set shiftwidth=4
     \ set textwidth=120         " do not go beyond 120 characters at any case!
     \ set expandtab
@@ -109,7 +109,7 @@ au BufNewFile,BufRead *.py
 
 " I might be a full-stack developer one day (ha!)
 au BufNewFile,BufRead *.js,*.html,*.css
-    \ set tabstop=2
+    \ set tabstop=2             " standard 2 spaces instead of tabs
     \ set softtabstop=2
     \ set shiftwidth=2
     \ set expandtab
@@ -117,8 +117,8 @@ au BufNewFile,BufRead *.js,*.html,*.css
     \ set fileformat=unix
 
 " I do edit swagger.. so fml.. I mean yaml!
-au BufNewFile,BufRead *.yaml
-    \ set tabstop=2
+au BufNewFile,BufRead *.yml,*.yaml
+    \ set tabstop=2             " standard 2 spaces instead of tabs
     \ set softtabstop=2
     \ set shiftwidth=2
     \ set expandtab
