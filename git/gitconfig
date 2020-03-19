@@ -1,0 +1,22 @@
+# This is Git's per-user configuration file.
+# A script in Makefile uses "GNU sed" to edit this file automatically.
+# Or feel free to edit this file and copy manually
+[user]
+	name = {{GIT_NAME}}
+    email = {{GIT_EMAIL}}
+[alias]
+    co = checkout
+    br = branch
+    ci = commit
+    st = status
+    last = log -1 HEAD
+    dt = difftool
+[diff]
+    tool = vimdiff
+[difftool]
+    prompt = false
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
