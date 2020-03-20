@@ -38,9 +38,10 @@ tmux: ## Install tmux related dotfiles.
 git: ## Install git configs.
 	@cp $(CURDIR)/git/gitconfig $(HOME)/.gitconfig
 	@read -p "Enter your name: " git_name; \
-		sed "/{{GIT_NAME}}/s/$$/ $$git_name/" $(HOME)/.gitconfig
+		sed -i -e "s/{{GIT_NAME}}/$$git_name/g" $(HOME)/.gitconfig
 	@read -p "Enter your e-mail: " git_email; \
-		sed "/{{GIT_EMAIL}}/s/$$/ $$git_email/" $(HOME)/.gitconfig
+		sed -i -e "s/{{GIT_EMAIL}}/$$git_email/g" $(HOME)/.gitconfig
+
 .PHONY: pyenv
 pyenv: ## Install pyenv.
 	@echo "Starting pyenv Setup..."
