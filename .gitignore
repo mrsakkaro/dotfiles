@@ -2,5 +2,8 @@
 *.swp
 *.un~
 
+# Personalized Git Setup file
+git/personalized_info
+
 # Mac specific files
 .DS_Store
